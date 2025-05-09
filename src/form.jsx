@@ -1,102 +1,86 @@
-// Mengimpor React untuk menggunakan komponen dan fitur React
+// Import React untuk membuat komponen
 import React from "react";
-// Mengimpor createRoot dari React DOM untuk merender aplikasi ke elemen HTML
+// Import createRoot dari React 18 untuk me-render ke DOM
 import { createRoot } from "react-dom/client";
 
-// Membuat class component bernama MyForm yang mewarisi dari React.Component
+// Mendefinisikan class component bernama MyForm
 class MyForm extends React.Component {
   constructor(props) {
     super(props); // Memanggil constructor parent (React.Component)
 
-    // Inisialisasi state awal
+    // Menentukan state awal
     this.state = {
-      name: "", // Menyimpan input nama
-      email: "", // Menyimpan input email
-      gender: "Man", // Menyimpan pilihan gender (default: 'Man')
+      name: "", // Menyimpan nilai input nama
+      email: "", // Menyimpan nilai input email
+      gender: "Man", // Menyimpan nilai default select gender
     };
 
-    // Binding method agar `this` tetap merujuk ke instance class ini
-    this.onNameChangeEventHandler = this.onNameChangeEventHandler.bind(this);
-    this.onEmailChangeEventHandler = this.onEmailChangeEventHandler.bind(this);
-    this.onGenderChangeEventHandler =
-      this.onGenderChangeEventHandler.bind(this);
-    this.onSubmitEventHandler = this.onSubmitEventHandler.bind(this);
+    // Binding fungsi agar `this` di dalamnya merujuk ke instance class
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // Method untuk menangani saat form disubmit
-  onSubmitEventHandler(event) {
-    event.preventDefault(); // Mencegah form dari reload halaman
+  // Fungsi untuk menangani perubahan di semua input
+  handleChange(event) {
+    // Ambil atribut 'name' dan 'value' dari elemen input yang sedang berubah
+    // Misalnya: <input name="email" value="abc@email.com" />
+    // Maka: name = "email", value = "abc@email.com"
+    const { name, value } = event.target;
 
-    // Menyusun data dari state untuk ditampilkan dalam alert
-    const message = `
-    Name: ${this.state.name}
-    Email: ${this.state.email}
-    Gender: ${this.state.gender}
-    `;
-
-    alert(message); // Menampilkan data dalam alert popup
+    // Gunakan nilai 'name' sebagai kunci (key) untuk memperbarui state
+    // Contoh hasil: this.setState({ email: "abc@email.com" });
+    // Jadi, nama input menentukan bagian state mana yang diubah
+    this.setState({ [name]: value });
   }
 
-  // Method untuk menangani perubahan pada input name
-  onNameChangeEventHandler(event) {
-    this.setState(() => {
-      return {
-        name: event.target.value, // Meng-update state name dengan nilai dari input
-      };
-    });
+  // Fungsi untuk menangani form submit
+  handleSubmit(event) {
+    event.preventDefault(); // Mencegah reload halaman saat submit
+    const { name, email, gender } = this.state; // Ambil data dari state
+
+    // Tampilkan data dalam alert
+    alert(`Name: ${name}\nEmail: ${email}\nGender: ${gender}`);
   }
 
-  // Method untuk menangani perubahan pada input email
-  onEmailChangeEventHandler(event) {
-    this.setState(() => {
-      return {
-        email: event.target.value, // Meng-update state email dengan nilai dari input
-      };
-    });
-  }
-
-  // Method untuk menangani perubahan pada select gender
-  onGenderChangeEventHandler(event) {
-    this.setState((prevState) => {
-      return {
-        gender: event.target.value, // Meng-update state gender
-      };
-    });
-  }
-
-  // Method render untuk menampilkan UI
+  // Fungsi render: menentukan tampilan komponen
   render() {
+    const { name, email, gender } = this.state; // Destructuring state
+
     return (
       <div>
-        <h1> Register Form</h1>
-        {/* Form dengan event handler onSubmit */}
-        <form onSubmit={this.onSubmitEventHandler}>
-          {/* Input untuk nama */}
+        <h1>Register Form</h1>
+
+        {/* Form dengan onSubmit handler */}
+        <form onSubmit={this.handleSubmit}>
+          {/* Input untuk Name */}
           <label htmlFor="name">Name: </label>
           <input
             type="text"
             id="name"
-            value={this.state.name}
-            onChange={this.onNameChangeEventHandler}
+            name="name" // harus cocok dengan key di state
+            value={name} // nilai input dikontrol oleh state
+            onChange={this.handleChange} // handler perubahan input
           />
           <br />
 
-          {/* Input untuk email */}
+          {/* Input untuk Email */}
           <label htmlFor="email">Email: </label>
           <input
             type="email"
             id="email"
-            value={this.state.email}
-            onChange={this.onEmailChangeEventHandler}
+            name="email"
+            value={email}
+            onChange={this.handleChange}
           />
           <br />
 
-          {/* Dropdown untuk gender */}
+          {/* Select untuk Gender */}
           <label htmlFor="gender">Gender: </label>
           <select
             id="gender"
-            value={this.state.gender}
-            onChange={this.onGenderChangeEventHandler}
+            name="gender"
+            value={gender}
+            onChange={this.handleChange}
           >
             <option value="Man">Man</option>
             <option value="Woman">Woman</option>
@@ -111,6 +95,7 @@ class MyForm extends React.Component {
   }
 }
 
-// Menemukan elemen HTML dengan id 'root' dan merender komponen MyForm ke dalamnya
+// Cari elemen root dari HTML
 const root = createRoot(document.getElementById("root"));
+// Render komponen MyForm ke dalam elemen root
 root.render(<MyForm />);
