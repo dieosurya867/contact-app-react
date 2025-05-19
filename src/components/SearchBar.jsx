@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 function SearchBar({ keyword, keywordChange }) {
   return (
@@ -8,14 +8,13 @@ function SearchBar({ keyword, keywordChange }) {
       type="text"
       placeholder="Cari berdasarkan nama"
       value={keyword}
-      onChange={(event) => keywordChange(event.target.value)}
-    />
-  );
+      onChange={(event) => keywordChange(event.target.value)} />
+  )
 }
 
-SearchBar.propTypes = {
+SearchBar.propType = {
   keyword: PropTypes.string.isRequired,
-  keywordChange: PropTypes.func.isRequired,
-};
+  keywordChange: PropTypes.func.isRequired
+}
 
 export default SearchBar;
